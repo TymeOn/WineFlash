@@ -1,6 +1,6 @@
 export class User {
     
-    constructor(_username, _password, _isAdmin) {
+    constructor(_username, _password) {
         this.username = _username;
         this.password = _password;
     }

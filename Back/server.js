@@ -6,6 +6,8 @@ import fs from 'fs';
 import https from 'https';
 import { User } from './src/models/User.js';
 import { UserDAO } from './src/dao/UserDAO.js';
+import { Wine } from './src/models/Wine.js';
+import { WineDAO } from './src/dao/WineDAO.js';
 import bcrypt from 'bcrypt';
 
 
@@ -17,6 +19,8 @@ dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const RESSOURCE_NOT_FOUND = "The requested ressource is not available."
 
 
 
@@ -41,6 +45,7 @@ const options = {
 };
 
 const userDAO = new UserDAO();
+const wineDAO = new WineDAO();
 
 
 
@@ -100,6 +105,99 @@ app.post('/login', async (req, res) => {
         // error handling
         res.status(500).send({errName: err.name, errMessage: err.message});
     }  
+});
+
+
+
+// READ
+// ----
+
+app.get('/wines', async(req, res) => {
+    try {
+        res.send(await wineDAO.getAll());
+    } catch (err) { 
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
+app.get('/wines/:id', async(req, res) => {
+    try {
+        const data = await wineDAO.get(req.params.id);
+        data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+    
+});
+
+
+
+// CREATE
+// ------
+
+app.post('/wines', async(req, res) => {
+    try {
+        const body = req.body;
+        res.status(201).send(await wineDAO.add(
+           body.barcode,
+           body.name,
+           body.description,
+           body.color,
+           body.year,
+           body.estate,
+           body.variety,
+           body.appellation,
+           body.winemaker,
+           body.price,
+           body.capacity,
+           body.bio
+        ));
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
+
+
+// UPDATE
+// ------
+
+app.put('/wines/:id', async(req, res) => {
+    try {
+        const body = req.body;
+        const data = await wineDAO.update(new Wine(
+            req.params.id,
+            body.barcode,
+            body.name,
+            body.description,
+            body.color,
+            body.year,
+            body.estate,
+            body.variety,
+            body.appellation,
+            body.winemaker,
+            body.price,
+            body.capacity,
+            body.bio
+        ));
+        data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
+
+
+// DELETE
+// ------
+
+app.delete('/wines/:id', async(req, res) => {
+    try {
+        const data = await wineDAO.remove(req.params.id);
+        data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
 });
 
 

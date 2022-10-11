@@ -20,6 +20,22 @@ export class DB {
                         id SERIAL, username VARCHAR(128), password VARCHAR(128), admin BOOLEAN DEFAULT FALSE, 
                         PRIMARY KEY(id)
                     );
+                    CREATE TABLE IF NOT EXISTS ${process.env.PG_SCHEMA}.wine (
+                        id SERIAL,
+                        barcode VARCHAR(128),
+                        name VARCHAR(128),
+                        description TEXT,
+                        color VARCHAR(32),
+                        year VARCHAR(16),
+                        estate VARCHAR(128),
+                        variety VARCHAR(128),
+                        appellation VARCHAR(128),
+                        winemaker VARCHAR(128),
+                        price NUMERIC,
+                        capacity VARCHAR(16),
+                        bio BOOLEAN,  
+                        PRIMARY KEY(id)
+                    );
                 `;
                 await DB.client.query(query1);
             } catch (err) {
