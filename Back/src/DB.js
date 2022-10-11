@@ -15,6 +15,13 @@ export class DB {
                 });
                 DB.client = await pool.connect();
                 console.log("Connected to PG DB");
+                const query1 = `
+                    CREATE TABLE IF NOT EXISTS ${process.env.PG_SCHEMA}.user (
+                        id SERIAL, username VARCHAR(128), password VARCHAR(128), admin BOOLEAN DEFAULT FALSE, 
+                        PRIMARY KEY(id)
+                    );
+                `;
+                await DB.client.query(query1);
             } catch (err) {
                 console.error(err);
                 console.error("Exit application...");
