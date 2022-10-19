@@ -8,6 +8,8 @@ import { User } from './src/models/User.js';
 import { UserDAO } from './src/dao/UserDAO.js';
 import { Wine } from './src/models/Wine.js';
 import { WineDAO } from './src/dao/WineDAO.js';
+import { Comment } from './src/models/Comment.js';
+import { CommentDAO } from './src/dao/CommentDAO.js';
 import bcrypt from 'bcrypt';
 
 
@@ -46,7 +48,7 @@ const options = {
 
 const userDAO = new UserDAO();
 const wineDAO = new WineDAO();
-
+const commentDAO = new CommentDAO();
 
 
 // USER OPERATIONS
@@ -65,7 +67,7 @@ app.post('/register', async (req, res) => {
         const tempUser = await userDAO.getHashedPassword(body.username);
         if(!tempUser) {
             bcrypt.hash(body.password, parseInt(process.env.SALT_ROUNDS), async(err, hash) => {
-                res.status(201).send(await userDAO.register(new User(body.username, hash)));
+                res.status(201).send(await userDAO.register(new User(0, body.username, hash, false)));
             });
         } else {
             res.status(500).send({ message: 'Error. This username is already taken' });
@@ -127,7 +129,23 @@ app.get('/wines/:id', async(req, res) => {
     } catch (err) {
         res.status(500).send({errName: err.name, errMessage: err.message});
     }
-    
+});
+
+app.get('/comments', async(req, res) => {
+    try {
+        res.send(await commentDAO.getAll());
+    } catch (err) { 
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
+app.get('/comments/:id', async(req, res) => {
+    try {
+        const data = await commentDAO.get(req.params.id);
+        data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
 });
 
 
@@ -151,6 +169,34 @@ app.post('/wines', async(req, res) => {
            body.price,
            body.capacity,
            body.bio
+        ));
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
+app.post('/comments', async(req, res) => {
+    try {
+        const body = req.body;
+        res.status(201).send(await commentDAO.add(
+            body.text,
+            body.rating,
+            new User(body.user.id, body.user.username, '', body.user.admin),
+            new Wine(
+                body.wine.id,
+                body.wine.barcode,
+                body.wine.name,
+                body.wine.description,
+                body.wine.color,
+                body.wine.year,
+                body.wine.estate,
+                body.wine.variety,
+                body.wine.appellation,
+                body.wine.winemaker,
+                body.wine.price,
+                body.wine.capacity,
+                body.wine.bio
+            ),
         ));
     } catch (err) {
         res.status(500).send({errName: err.name, errMessage: err.message});
@@ -186,6 +232,36 @@ app.put('/wines/:id', async(req, res) => {
     }
 });
 
+app.put('/comments/:id', async(req, res) => {
+    try {
+        const body = req.body;
+        const data = await commentDAO.update(new Comment(
+            req.params.id,
+            body.text,
+            body.rating,
+            new User(body.user.id, body.user.username, '', body.user.admin),
+            new Wine(
+                body.wine.id,
+                body.wine.barcode,
+                body.wine.name,
+                body.wine.description,
+                body.wine.color,
+                body.wine.year,
+                body.wine.estate,
+                body.wine.variety,
+                body.wine.appellation,
+                body.wine.winemaker,
+                body.wine.price,
+                body.wine.capacity,
+                body.wine.bio
+            ),
+        ));
+        data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
 
 
 // DELETE
@@ -199,6 +275,16 @@ app.delete('/wines/:id', async(req, res) => {
         res.status(500).send({errName: err.name, errMessage: err.message});
     }
 });
+
+app.delete('/comments/:id', async(req, res) => {
+    try {
+        const data = await commentDAO.remove(req.params.id);
+        data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
 
 
 

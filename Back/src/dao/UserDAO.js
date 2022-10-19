@@ -9,13 +9,13 @@ export class UserDAO {
     async register(user) {
         const client = await DB.open();
             const query = {
-            text: 'INSERT INTO "' + process.env.PG_SCHEMA + '"."user"(username, password) VALUES ($1, $2) RETURNING *',
-            values: [user.getUsername(), user.getPassword()],
+            text: 'INSERT INTO "' + process.env.PG_SCHEMA + '"."user"(username, password, admin) VALUES ($1, $2, $3) RETURNING *',
+            values: [user.getUsername(), user.getPassword(), user.isAdmin()],
         };
         const result = await client.query(query);
         let data;
         if(result && result.rows && result.rows[0]) {
-            data = new User(result.rows[0].username, result.rows[0].password)
+            data = new User(result.rows[0].id, result.rows[0].username, result.rows[0].password, result.rows[0].admin)
         } else {
             data = null;
         }
@@ -55,11 +55,32 @@ export class UserDAO {
                     row.id,
                     row.username,
                     row.password,
+                    row.admin
                 );
                 data.push(user);
             }
         } else {
             data = null;
+        }
+        return data;
+    }
+
+    // get one user
+    async get(id) {
+        let data = null;
+        const client = await DB.open();
+        const query = {
+            text: 'SELECT * FROM "' + process.env.PG_SCHEMA + '"."user" WHERE id=$1 ORDER BY id ASC',
+            values: [id],
+        }
+        const result = await client.query(query);
+        if(result && result.rows && result.rows[0]) {
+            data = new User(
+                result.rows[0].id,
+                result.rows[0].username,
+                result.rows[0].password,
+                result.rows[0].admin
+            );
         }
         return data;
     }

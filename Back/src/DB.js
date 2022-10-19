@@ -16,11 +16,11 @@ export class DB {
                 DB.client = await pool.connect();
                 console.log("Connected to PG DB");
                 const query1 = `
-                    CREATE TABLE IF NOT EXISTS ${process.env.PG_SCHEMA}.user (
+                    CREATE TABLE IF NOT EXISTS "${process.env.PG_SCHEMA}"."user" (
                         id SERIAL, username VARCHAR(128), password VARCHAR(128), admin BOOLEAN DEFAULT FALSE, 
                         PRIMARY KEY(id)
                     );
-                    CREATE TABLE IF NOT EXISTS ${process.env.PG_SCHEMA}.wine (
+                    CREATE TABLE IF NOT EXISTS "${process.env.PG_SCHEMA}"."wine" (
                         id SERIAL,
                         barcode VARCHAR(128),
                         name VARCHAR(128),
@@ -38,6 +38,19 @@ export class DB {
                     );
                 `;
                 await DB.client.query(query1);
+                const query2 = `
+                    CREATE TABLE IF NOT EXISTS ${process.env.PG_SCHEMA}.comment (
+                        id SERIAL,
+                        text TEXT,
+                        rating INTEGER,
+                        author INTEGER,
+                        wine INTEGER,
+                        PRIMARY KEY(id),
+                        FOREIGN KEY(author) REFERENCES "${process.env.PG_SCHEMA}"."user"(id) ON DELETE CASCADE,
+                        FOREIGN KEY(wine) REFERENCES "${process.env.PG_SCHEMA}"."wine"(id) ON DELETE CASCADE
+                    );
+                `;
+                await DB.client.query(query2);
             } catch (err) {
                 console.error(err);
                 console.error("Exit application...");
