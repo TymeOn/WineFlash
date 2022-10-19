@@ -1,0 +1,7 @@
+{
+  "name": "WineFlash-Front",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

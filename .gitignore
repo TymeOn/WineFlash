@@ -1,6 +1,9 @@
 # Keys and Certificates
 *.pem
 
+# IDE Files
+.vscode
+
 # Logs
 logs
 *.log
