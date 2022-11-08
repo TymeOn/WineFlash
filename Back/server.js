@@ -11,6 +11,7 @@ import { WineDAO } from './src/dao/WineDAO.js';
 import { Comment } from './src/models/Comment.js';
 import { CommentDAO } from './src/dao/CommentDAO.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 
 
@@ -49,6 +50,41 @@ const options = {
 const userDAO = new UserDAO();
 const wineDAO = new WineDAO();
 const commentDAO = new CommentDAO();
+
+
+
+// JWT TOKEN MANAGEMENT
+// --------------------
+
+function generateJWT(username) {
+    return jwt.sign({data: username}, process.env.JWT_SECRET, { expiresIn: process.env.JWT_LIFE });
+}
+
+function generateRefreshJWT(username) {
+    return jwt.sign({data: username}, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_LIFE });
+}
+  
+
+
+// AUTHENTICATION MIDDLEWARE
+// -------------------------
+
+const authenticationMiddleware = (req, res, next) => {
+    const { authorization } = req.headers;
+    const token = authorization && authorization.split(" ")[1];
+    console.log(token);
+    if (token == null) {
+        return res.sendStatus(401);
+    }
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            console.log(err);
+            return res.sendStatus(403);
+        }
+        req.user = user;
+        next();
+    });
+};
 
 
 // USER OPERATIONS
@@ -97,11 +133,37 @@ app.post('/login', async (req, res) => {
         }
         bcrypt.compare(req.body.password, hashedPassword, (err, result) => {
             if (result) {
-                res.status(200).json({});
+                res.json({
+                    token: generateJWT(req.body.username),
+                    refresh: generateRefreshJWT(req.body.username)
+                });
             } else {
-                return res.status(401).json({ message: 'Error. Wrong login or password' })
+                return res.status(401).json({ message: 'Error. Wrong login or password' });
             }
         });
+
+    } catch (err) {
+        // error handling
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }  
+});
+
+
+app.post('/refresh', async (req, res) => {
+    try {
+        const body = req.body;
+
+        // check for valid input
+        if (!body.username || !body.refresh) {
+            return res.status(400).json({ message: 'Error. Please enter the correct username and refresh token' })
+        }
+
+        if (jwt.verify(body.refresh, process.env.JWT_REFRESH_SECRET)) {
+            const token = generateJWT(body.username);
+            return res.status(200).json({ token: token });
+        } else {
+            return res.status(401).json({ message: 'Error. Invalid refresh token' });
+        }
 
     } catch (err) {
         // error handling
@@ -114,7 +176,7 @@ app.post('/login', async (req, res) => {
 // READ
 // ----
 
-app.get('/wines', async(req, res) => {
+app.get('/wines', authenticationMiddleware, async(req, res) => {
     try {
         res.send(await wineDAO.getAll());
     } catch (err) { 
@@ -122,7 +184,7 @@ app.get('/wines', async(req, res) => {
     }
 });
 
-app.get('/wines/:id', async(req, res) => {
+app.get('/wines/:id', authenticationMiddleware, async(req, res) => {
     try {
         const data = await wineDAO.get(req.params.id);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
@@ -131,7 +193,7 @@ app.get('/wines/:id', async(req, res) => {
     }
 });
 
-app.get('/comments', async(req, res) => {
+app.get('/comments', authenticationMiddleware, async(req, res) => {
     try {
         res.send(await commentDAO.getAll());
     } catch (err) { 
@@ -139,7 +201,7 @@ app.get('/comments', async(req, res) => {
     }
 });
 
-app.get('/comments/:id', async(req, res) => {
+app.get('/comments/:id', authenticationMiddleware, async(req, res) => {
     try {
         const data = await commentDAO.get(req.params.id);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
@@ -153,7 +215,7 @@ app.get('/comments/:id', async(req, res) => {
 // CREATE
 // ------
 
-app.post('/wines', async(req, res) => {
+app.post('/wines', authenticationMiddleware, async(req, res) => {
     try {
         const body = req.body;
         res.status(201).send(await wineDAO.add(
@@ -175,7 +237,7 @@ app.post('/wines', async(req, res) => {
     }
 });
 
-app.post('/comments', async(req, res) => {
+app.post('/comments', authenticationMiddleware, async(req, res) => {
     try {
         const body = req.body;
         res.status(201).send(await commentDAO.add(
@@ -208,7 +270,7 @@ app.post('/comments', async(req, res) => {
 // UPDATE
 // ------
 
-app.put('/wines/:id', async(req, res) => {
+app.put('/wines/:id', authenticationMiddleware, async(req, res) => {
     try {
         const body = req.body;
         const data = await wineDAO.update(new Wine(
@@ -232,7 +294,7 @@ app.put('/wines/:id', async(req, res) => {
     }
 });
 
-app.put('/comments/:id', async(req, res) => {
+app.put('/comments/:id', authenticationMiddleware, async(req, res) => {
     try {
         const body = req.body;
         const data = await commentDAO.update(new Comment(
@@ -267,7 +329,7 @@ app.put('/comments/:id', async(req, res) => {
 // DELETE
 // ------
 
-app.delete('/wines/:id', async(req, res) => {
+app.delete('/wines/:id', authenticationMiddleware, async(req, res) => {
     try {
         const data = await wineDAO.remove(req.params.id);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
@@ -276,7 +338,7 @@ app.delete('/wines/:id', async(req, res) => {
     }
 });
 
-app.delete('/comments/:id', async(req, res) => {
+app.delete('/comments/:id', authenticationMiddleware, async(req, res) => {
     try {
         const data = await commentDAO.remove(req.params.id);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
