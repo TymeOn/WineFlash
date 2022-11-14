@@ -15,6 +15,24 @@
   </ion-header>
 
   <div id="container">
-    <strong class="capitalize">Scanner</strong>
+    <div *ngIf="!cameraAllowed">
+      Bah les permissions gros
+    </div>
+
+    <div *ngIf="cameraAllowed && !isScanning">
+      <ion-button expand="block" size="large" class="ion-margin-start ion-margin-end" style="height: 5em" (click)="startScan()">
+        <ion-icon slot="start" name="barcode"></ion-icon>
+        <div class="ion-text-center">
+          Scanner une bouteille de vin
+        </div>
+      </ion-button>
+    </div>
   </div>
+
+  <div id="container-scanner" *ngIf="cameraAllowed && isScanning">
+    <ion-button class="ion-float-right" (click)="stopScan()">
+      <ion-icon [ios]="'close-outline'" [md]="'close-sharp'"></ion-icon>
+    </ion-button>
+  </div>
+
 </ion-content>
