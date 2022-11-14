@@ -10,6 +10,14 @@ const routes: Routes = [
   {
     path: 'scanner',
     loadChildren: () => import('./pages/scanner/scanner.module').then(m => m.ScannerPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/auth/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/auth/login/login.module').then( m => m.LoginPageModule)
   }
 ];
 

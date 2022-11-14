@@ -3,6 +3,7 @@
 
 # IDE Files
 .vscode
+.idea
 
 # Logs
 logs
