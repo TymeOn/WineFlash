@@ -22,7 +22,8 @@ export class DB {
                     );
                     CREATE TABLE IF NOT EXISTS "${process.env.PG_SCHEMA}"."wine" (
                         id SERIAL,
-                        barcode VARCHAR(128),
+                        barcode VARCHAR(64),
+                        template VARCHAR(128),
                         name VARCHAR(128),
                         description TEXT,
                         color VARCHAR(32),

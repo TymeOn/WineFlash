@@ -3,6 +3,7 @@ export class Wine {
     constructor(
         _id,
         _barcode,
+        _template,
         _name,
         _description,
         _color,
@@ -17,6 +18,7 @@ export class Wine {
     ) {
         this.id = _id;
         this.barcode = _barcode;
+        this.template = _template;
         this.name = _name;
         this.description = _description;
         this.color = _color;
@@ -33,6 +35,7 @@ export class Wine {
     // getters
     getId() { return this.id; }
     getBarcode() { return this.barcode; }
+    getTemplate() { return this.template; }
     getName() { return this.name; }
     getDescription() { return this.description; }
     getColor() { return this.color; }
@@ -48,6 +51,7 @@ export class Wine {
     // setters
     setId(_id) { this.id = _id; }
     setBarcode(_barcode) { this.barcode = _barcode; }
+    setTemplate(_template) { this.template = _template; }
     setName(_name) { this.name = _name; }
     setDescription(_description) { this.description = _description; }
     setColor(_color) { this.color = _color; }

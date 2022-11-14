@@ -72,7 +72,6 @@ function generateRefreshJWT(username) {
 const authenticationMiddleware = (req, res, next) => {
     const { authorization } = req.headers;
     const token = authorization && authorization.split(" ")[1];
-    console.log(token);
     if (token == null) {
         return res.sendStatus(401);
     }
@@ -193,6 +192,15 @@ app.get('/wines/:id', authenticationMiddleware, async(req, res) => {
     }
 });
 
+app.get('/wine-from-barcode/:barcode', authenticationMiddleware, async(req, res) => {
+    try {
+        const data = await wineDAO.getFromBarcode(req.params.barcode);
+        data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
 app.get('/comments', authenticationMiddleware, async(req, res) => {
     try {
         res.send(await commentDAO.getAll());
@@ -220,6 +228,7 @@ app.post('/wines', authenticationMiddleware, async(req, res) => {
         const body = req.body;
         res.status(201).send(await wineDAO.add(
            body.barcode,
+           body.template,
            body.name,
            body.description,
            body.color,
@@ -247,6 +256,7 @@ app.post('/comments', authenticationMiddleware, async(req, res) => {
             new Wine(
                 body.wine.id,
                 body.wine.barcode,
+                body.wine.template,
                 body.wine.name,
                 body.wine.description,
                 body.wine.color,
@@ -276,6 +286,7 @@ app.put('/wines/:id', authenticationMiddleware, async(req, res) => {
         const data = await wineDAO.update(new Wine(
             req.params.id,
             body.barcode,
+            body.template,
             body.name,
             body.description,
             body.color,
@@ -305,6 +316,7 @@ app.put('/comments/:id', authenticationMiddleware, async(req, res) => {
             new Wine(
                 body.wine.id,
                 body.wine.barcode,
+                body.wine.template,
                 body.wine.name,
                 body.wine.description,
                 body.wine.color,
