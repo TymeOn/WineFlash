@@ -2,8 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import fs from 'fs';
-import https from 'https';
 import { User } from './src/models/User.js';
 import { UserDAO } from './src/dao/UserDAO.js';
 import { Wine } from './src/models/Wine.js';
@@ -41,11 +39,6 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', true);
     next();
 });
-
-const options = {
-    key: fs.readFileSync('keys/key.pem'),
-    cert: fs.readFileSync('keys/cert.pem')
-};
 
 const userDAO = new UserDAO();
 const wineDAO = new WineDAO();
@@ -192,8 +185,9 @@ app.get('/wines/:id', authenticationMiddleware, async(req, res) => {
     }
 });
 
-app.get('/wine-from-barcode/:barcode', authenticationMiddleware, async(req, res) => {
+app.get('/wine-from-barcode/:barcode', async(req, res) => {
     try {
+        console.log(req.params.barcode);
         const data = await wineDAO.getFromBarcode(req.params.barcode);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
     } catch (err) {
@@ -365,6 +359,6 @@ app.delete('/comments/:id', authenticationMiddleware, async(req, res) => {
 // STARTUP
 // -------
 
-https.createServer(options, app).listen(process.env.PORT, () => {
+app.listen(process.env.PORT, () => {
     console.log('WineFlash-Back running on port ' + process.env.PORT);
 });
