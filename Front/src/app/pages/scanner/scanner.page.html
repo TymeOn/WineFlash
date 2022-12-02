@@ -16,7 +16,16 @@
 
   <div id="container">
     <div *ngIf="!cameraAllowed">
-      Bah les permissions gros
+      Veuillez activer les permissions d'accès à la caméra dans vos paramètres
+    </div>
+
+    <div *ngIf="!isScanning">
+      <ion-button expand="block" size="large" class="ion-margin-start ion-margin-end" style="height: 5em" (click)="testScan()">
+        <ion-icon slot="start" name="barcode"></ion-icon>
+        <div class="ion-text-center">
+          [DEBUG]
+        </div>
+      </ion-button>
     </div>
 
     <div *ngIf="cameraAllowed && !isScanning">

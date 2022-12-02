@@ -1,5 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-scanner',
@@ -11,7 +14,7 @@ export class ScannerPage implements OnInit, AfterViewInit {
   cameraAllowed = false;
   isScanning = false;
 
-  constructor() {}
+  constructor(private http: HttpClient, private toastController: ToastController) {}
 
   ngOnInit() {
     this.checkPermission().then();
@@ -34,7 +37,26 @@ export class ScannerPage implements OnInit, AfterViewInit {
 
     const result = await BarcodeScanner.startScan(); // start scanning and wait for a result
     if (result.hasContent) {
-      console.log(result.content); // log the raw scanned content
+      this.http.get(environment.url + 'wine-from-barcode/' + result.content).subscribe(
+        async (res: any) => {
+          const toast = await this.toastController.create({
+            message: res.name,
+            duration: 1500,
+            position: 'bottom'
+          });
+
+          await toast.present();
+        },
+        async (err) => {
+          const toast = await this.toastController.create({
+            message: 'Vin non trouvé :(',
+            duration: 1500,
+            position: 'bottom'
+          });
+
+          await toast.present();
+        }
+      );
     }
 
     document.querySelector('body').classList.remove('scanner-active');
@@ -46,6 +68,29 @@ export class ScannerPage implements OnInit, AfterViewInit {
     BarcodeScanner.stopScan().then();
     document.querySelector('body').classList.remove('scanner-active');
     this.isScanning = false;
+  }
+
+  testScan() {
+    this.http.get(environment.url + 'wine-from-barcode/9123456987654').subscribe(
+      async (res: any) => {
+        const toast = await this.toastController.create({
+          message: res.name,
+          duration: 1500,
+          position: 'bottom'
+        });
+
+        await toast.present();
+      },
+      async (err) => {
+        const toast = await this.toastController.create({
+          message: 'Vin non trouvé :(',
+          duration: 1500,
+          position: 'bottom'
+        });
+
+        await toast.present();
+      }
+    );
   }
 
 }
