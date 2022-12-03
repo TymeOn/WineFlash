@@ -168,7 +168,7 @@ app.post('/refresh', async (req, res) => {
 // READ
 // ----
 
-app.get('/wines', authenticationMiddleware, async(req, res) => {
+app.get('/wines', async(req, res) => {
     try {
         res.send(await wineDAO.getAll());
     } catch (err) { 
@@ -176,7 +176,7 @@ app.get('/wines', authenticationMiddleware, async(req, res) => {
     }
 });
 
-app.get('/wines/:id', authenticationMiddleware, async(req, res) => {
+app.get('/wines/:id', async(req, res) => {
     try {
         const data = await wineDAO.get(req.params.id);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
@@ -217,7 +217,7 @@ app.get('/comments/:id', authenticationMiddleware, async(req, res) => {
 // CREATE
 // ------
 
-app.post('/wines', authenticationMiddleware, async(req, res) => {
+app.post('/wines', async(req, res) => {
     try {
         const body = req.body;
         res.status(201).send(await wineDAO.add(
@@ -274,7 +274,7 @@ app.post('/comments', authenticationMiddleware, async(req, res) => {
 // UPDATE
 // ------
 
-app.put('/wines/:id', authenticationMiddleware, async(req, res) => {
+app.put('/wines/:id', async(req, res) => {
     try {
         const body = req.body;
         const data = await wineDAO.update(new Wine(
@@ -335,7 +335,7 @@ app.put('/comments/:id', authenticationMiddleware, async(req, res) => {
 // DELETE
 // ------
 
-app.delete('/wines/:id', authenticationMiddleware, async(req, res) => {
+app.delete('/wines/:id', async(req, res) => {
     try {
         const data = await wineDAO.remove(req.params.id);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
