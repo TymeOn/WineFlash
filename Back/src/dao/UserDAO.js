@@ -25,17 +25,20 @@ export class UserDAO {
 
     // check if the user exists in the DB
     async getHashedPassword(username) {
+        let data = null;
         const client = await DB.open();
         const query = {
-            text: 'SELECT password, admin FROM "' + process.env.PG_SCHEMA + '"."user" WHERE username=$1',
+            text: 'SELECT * FROM "' + process.env.PG_SCHEMA + '"."user" WHERE username=$1',
             values: [username]
         };
         const result = await client.query(query);
-        let data;
         if(result && result.rows && result.rows[0]) {
-            data = {password: result.rows[0].password, isAdmin: result.rows[0].admin};
-        } else {
-            data = null;
+            data = new User(
+                result.rows[0].id,
+                result.rows[0].username,
+                result.rows[0].password,
+                result.rows[0].admin
+            );
         }
         return data;
     }

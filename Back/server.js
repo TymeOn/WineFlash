@@ -118,14 +118,16 @@ app.post('/login', async (req, res) => {
         }
 
         // check if the input matches an user in the DB
-        const data = await userDAO.getHashedPassword(body.username);
-        const hashedPassword = data.password;
+        const user = await userDAO.getHashedPassword(body.username);
+        const hashedPassword = user.getPassword();
         if (!hashedPassword) {
             return res.status(401).json({ message: 'Error. Wrong login or password' })
         }
         bcrypt.compare(req.body.password, hashedPassword, (err, result) => {
             if (result) {
                 res.json({
+                    username: user.getUsername(),
+                    admin: user.isAdmin(),
                     token: generateJWT(req.body.username),
                     refresh: generateRefreshJWT(req.body.username)
                 });
