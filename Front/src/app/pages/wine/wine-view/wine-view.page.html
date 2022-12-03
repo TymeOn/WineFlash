@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="'Retour'"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Détails du vin</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h3 class="ion-padding-start">Informations générales</h3>
+  <app-wine-detail *ngIf="wineId" [wineId]="wineId"></app-wine-detail>
+</ion-content>

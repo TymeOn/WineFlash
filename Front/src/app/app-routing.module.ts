@@ -18,7 +18,24 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/auth/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'wine-view/:wineId',
+    loadChildren: () => import('./pages/wine/wine-view/wine-view.module').then(m => m.WineViewPageModule)
+  },
+  {
+    path: 'wine-edit/:wineId',
+    loadChildren: () => import('./pages/wine/wine-edit/wine-edit.module').then(m => m.WineViewEditModule)
+  },
+  {
+    path: 'wine-list',
+    loadChildren: () => import('./pages/wine/wine-list/wine-list.module').then(m => m.WineListPageModule)
+  },
+  {
+    path: 'wine-create',
+    loadChildren: () => import('./pages/wine/wine-create/wine-create.module').then(m => m.WineViewCreateModule)
   }
+
 ];
 
 @NgModule({

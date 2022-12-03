@@ -3,6 +3,7 @@ import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-scanner',
@@ -14,7 +15,7 @@ export class ScannerPage implements OnInit, AfterViewInit {
   cameraAllowed = false;
   isScanning = false;
 
-  constructor(private http: HttpClient, private toastController: ToastController) {}
+  constructor(private http: HttpClient, private toastController: ToastController, private router: Router) {}
 
   ngOnInit() {
     this.checkPermission().then();
@@ -71,15 +72,8 @@ export class ScannerPage implements OnInit, AfterViewInit {
   }
 
   testScan() {
-    this.http.get(environment.url + 'wine-from-barcode/9123456987654').subscribe(
-      async (res: any) => {
-        const toast = await this.toastController.create({
-          message: res.name,
-          duration: 1500,
-          position: 'bottom'
-        });
-
-        await toast.present();
+    this.http.get(environment.url + 'wine-from-barcode/9123456987654').subscribe((res: any) => {
+        this.router.navigate(['/wine-view', res.id]).then();
       },
       async (err) => {
         const toast = await this.toastController.create({
