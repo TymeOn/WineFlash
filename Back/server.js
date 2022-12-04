@@ -195,7 +195,7 @@ app.get('/wine-from-barcode/:barcode', async(req, res) => {
     }
 });
 
-app.get('/comments', authenticationMiddleware, async(req, res) => {
+app.get('/comments', async(req, res) => {
     try {
         res.send(await commentDAO.getAll());
     } catch (err) { 
@@ -206,6 +206,15 @@ app.get('/comments', authenticationMiddleware, async(req, res) => {
 app.get('/comments/:id', authenticationMiddleware, async(req, res) => {
     try {
         const data = await commentDAO.get(req.params.id);
+        data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
+    } catch (err) {
+        res.status(500).send({errName: err.name, errMessage: err.message});
+    }
+});
+
+app.get('/comments-from-wine/:id', async(req, res) => {
+    try {
+        let data = await commentDAO.getFromWine(req.params.id);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
     } catch (err) {
         res.status(500).send({errName: err.name, errMessage: err.message});
@@ -240,29 +249,14 @@ app.post('/wines', async(req, res) => {
     }
 });
 
-app.post('/comments', authenticationMiddleware, async(req, res) => {
+app.post('/comments', async(req, res) => {
     try {
         const body = req.body;
         res.status(201).send(await commentDAO.add(
             body.text,
             body.rating,
-            new User(body.user.id, body.user.username, '', body.user.admin),
-            new Wine(
-                body.wine.id,
-                body.wine.barcode,
-                body.wine.template,
-                body.wine.name,
-                body.wine.description,
-                body.wine.color,
-                body.wine.year,
-                body.wine.estate,
-                body.wine.variety,
-                body.wine.appellation,
-                body.wine.winemaker,
-                body.wine.price,
-                body.wine.capacity,
-                body.wine.bio
-            ),
+            body.author,
+            body.wine
         ));
     } catch (err) {
         res.status(500).send({errName: err.name, errMessage: err.message});
@@ -299,30 +293,15 @@ app.put('/wines/:id', async(req, res) => {
     }
 });
 
-app.put('/comments/:id', authenticationMiddleware, async(req, res) => {
+app.put('/comments/:id', async(req, res) => {
     try {
         const body = req.body;
         const data = await commentDAO.update(new Comment(
             req.params.id,
             body.text,
             body.rating,
-            new User(body.user.id, body.user.username, '', body.user.admin),
-            new Wine(
-                body.wine.id,
-                body.wine.barcode,
-                body.wine.template,
-                body.wine.name,
-                body.wine.description,
-                body.wine.color,
-                body.wine.year,
-                body.wine.estate,
-                body.wine.variety,
-                body.wine.appellation,
-                body.wine.winemaker,
-                body.wine.price,
-                body.wine.capacity,
-                body.wine.bio
-            ),
+            body.author,
+            body.wine
         ));
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);
     } catch (err) {
@@ -344,7 +323,7 @@ app.delete('/wines/:id', async(req, res) => {
     }
 });
 
-app.delete('/comments/:id', authenticationMiddleware, async(req, res) => {
+app.delete('/comments/:id', async(req, res) => {
     try {
         const data = await commentDAO.remove(req.params.id);
         data ? res.send(data) : res.status(404).send(RESSOURCE_NOT_FOUND);

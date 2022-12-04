@@ -34,6 +34,18 @@ const routes: Routes = [
   {
     path: 'wine-create',
     loadChildren: () => import('./pages/wine/wine-create/wine-create.module').then(m => m.WineViewCreateModule)
+  },
+  {
+    path: 'comment-list/:wineId',
+    loadChildren: () => import('./pages/comment/comment-list/comment-list.module').then(m => m.CommentListPageModule)
+  },
+  {
+    path: 'comment-create/:wineId/:userId',
+    loadChildren: () => import('./pages/comment/comment-create/comment-create.module').then(m => m.CommentCreateModule)
+  },
+  {
+    path: 'comment-edit/:wineId',
+    loadChildren: () => import('./pages/comment/comment-edit/comment-edit.module').then(m => m.CommentEditPageModule)
   }
 
 ];

@@ -22,4 +22,8 @@ export class WineViewPage implements OnInit {
     this.router.navigate(['/scanner']).then();
   }
 
+  goToComms() {
+    this.router.navigate(['/comment-list', this.wineId]).then();
+  }
+
 }

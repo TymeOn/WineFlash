@@ -10,4 +10,5 @@
 <ion-content>
   <h3 class="ion-padding-start">Informations générales</h3>
   <app-wine-detail *ngIf="wineId" [wineId]="wineId"></app-wine-detail>
+  <ion-button expand="block" (click)="goToComms()">Commentaires</ion-button>
 </ion-content>

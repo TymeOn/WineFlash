@@ -18,8 +18,8 @@ export class WineEditPage implements OnInit {
     });
   }
 
-  goToScan() {
-    this.router.navigate(['/scanner']).then();
+  goToComms() {
+    this.router.navigate(['/comment-edit', this.wineId]).then();
   }
 
 }
