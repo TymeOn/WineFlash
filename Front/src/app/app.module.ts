@@ -11,7 +11,9 @@ import { AuthModule } from './auth/auth.module';
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, AuthModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  ],
+
   bootstrap: [AppComponent],
 })
 export class AppModule {}
