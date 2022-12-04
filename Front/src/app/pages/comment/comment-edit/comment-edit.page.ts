@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Component} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {AlertController, NavController, ViewWillEnter} from '@ionic/angular';
@@ -14,8 +14,13 @@ export class CommentEditPage implements ViewWillEnter {
   wineId: number;
   commentList: any;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private alertController: AlertController, private navController: NavController) { }
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private alertController: AlertController) {
+  }
 
+  // get all the comments from a wine
   ionViewWillEnter() {
     this.route.params.subscribe(params => {
       this.wineId = params.wineId;
@@ -26,6 +31,7 @@ export class CommentEditPage implements ViewWillEnter {
     });
   }
 
+  // shows an alert befores deleting a comment
   async presentDeleteAlert(commId) {
     const alert = await this.alertController.create({
       header: 'Souhaitez-vous vraiment suuprimer ce vin?',
@@ -47,6 +53,7 @@ export class CommentEditPage implements ViewWillEnter {
     await alert.present();
   }
 
+  // deletes a comment
   deleteComm(commId) {
     this.http.delete(environment.url + 'comments/' + commId).subscribe(() => {
       this.ionViewWillEnter();

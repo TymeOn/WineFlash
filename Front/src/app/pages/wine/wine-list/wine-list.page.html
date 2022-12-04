@@ -11,15 +11,15 @@
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Liste des vins</ion-title>
-      <ion-button slot="end" class="ion-margin-end" (click)="goToCreate()">
-        <ion-icon slot="icon-only" name="add"></ion-icon>
-      </ion-button>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
+    <ion-button (click)="goToCreate()" class="ion-margin-start ion-margin-end" expand="block">
+      <ion-icon name="add" slot="icon-only"></ion-icon>
+    </ion-button>
     <ion-list>
-      <ion-card *ngFor="let wine of wineList" (click)="goToWine(wine.id)">
+      <ion-card (click)="goToWine(wine.id)" *ngFor="let wine of wineList">
         <ion-card-header>
           <ion-card-title>{{ wine.name }}</ion-card-title>
           <ion-card-subtitle>{{ wine.color }}</ion-card-subtitle>

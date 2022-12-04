@@ -21,7 +21,7 @@
           <ion-card-title>
             <ion-icon *ngFor="let _ of [].constructor(comment.rating)" name="star"></ion-icon>
             <ion-icon *ngFor="let _ of [].constructor(5 - comment.rating)" name="star-outline"></ion-icon>
-            <ion-button color="danger" style="float: right" (click)="presentDeleteAlert(comment.id)">
+            <ion-button (click)="presentDeleteAlert(comment.id)" color="danger" style="float: right">
               <ion-icon name="trash-outline"></ion-icon>
             </ion-button>
           </ion-card-title>

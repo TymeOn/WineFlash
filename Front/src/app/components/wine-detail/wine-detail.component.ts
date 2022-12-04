@@ -16,7 +16,8 @@ export class WineDetailComponent implements OnInit {
   @Input() newWine = false;
   wine: any;
 
-  constructor(private http: HttpClient, private alertController: AlertController, private router: Router) { }
+  constructor(private http: HttpClient, private alertController: AlertController, private router: Router) {
+  }
 
   ngOnInit() {
     if (this.newWine) {
@@ -43,12 +44,14 @@ export class WineDetailComponent implements OnInit {
     }
   }
 
+  // updates the wine details
   updateWine() {
     this.http.put(environment.url + 'wines/' + this.wineId, this.wine).subscribe((data: any) => {
       this.wine = data;
     });
   }
 
+  // show an alert to confirm the deletion of a wine
   async presentDeleteAlert() {
     const alert = await this.alertController.create({
       header: 'Souhaitez-vous vraiment suuprimer ce vin?',
@@ -70,12 +73,14 @@ export class WineDetailComponent implements OnInit {
     await alert.present();
   }
 
+  // removes a wine
   deleteWine() {
     this.http.delete(environment.url + 'wines/' + this.wineId).subscribe(() => {
       this.router.navigate(['/wine-list']).then();
     });
   }
 
+  // create a wine
   createWine() {
     this.http.post(environment.url + 'wines', this.wine).subscribe((data: any) => {
       this.router.navigate(['/wine-list']).then();

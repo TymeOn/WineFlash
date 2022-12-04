@@ -18,6 +18,7 @@ export class WineEditPage implements OnInit {
     });
   }
 
+  // redirect to the comments
   goToComms() {
     this.router.navigate(['/comment-edit', this.wineId]).then();
   }

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {NavController} from '@ionic/angular';
@@ -15,8 +15,10 @@ export class CommentCreatePage implements OnInit {
   userId: number;
   comment: any;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private navController: NavController) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient, private navController: NavController) {
+  }
 
+  // get the route parameters and sets up a base comment
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.wineId = params.wineId;
@@ -31,7 +33,8 @@ export class CommentCreatePage implements OnInit {
     };
   }
 
-  createCommentary() {
+  // create the comment
+  createComment() {
     this.http.post(environment.url + 'comments', this.comment).subscribe((data: any) => {
       this.navController.back();
     });

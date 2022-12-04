@@ -67,6 +67,7 @@
 
 <ion-button *ngIf="editable && !newWine" expand="block" (click)="updateWine()">Enregistrer les modifications</ion-button>
 
-<ion-button *ngIf="editable && !newWine" color="danger" expand="block" (click)="presentDeleteAlert()">Supprimer le vin</ion-button>
+<ion-button (click)="presentDeleteAlert()" *ngIf="editable && !newWine" color="danger" expand="block">Supprimer le vin
+</ion-button>
 
 <ion-button *ngIf="newWine" expand="block" (click)="createWine()">Créer le vin</ion-button>
