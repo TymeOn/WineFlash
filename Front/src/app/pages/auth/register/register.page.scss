@@ -1,8 +1,6 @@
-ion-item{
-  --background: #3880ff;
-  --color: #fff;
-}
-
-ion-button{
-  --background: #062f77;
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
