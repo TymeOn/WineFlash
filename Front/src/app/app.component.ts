@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {AuthService} from './services/auth.service';
 import {Router} from '@angular/router';
-import {DataService} from "./services/data.service";
+import {MenuController} from '@ionic/angular';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -9,17 +10,18 @@ import {DataService} from "./services/data.service";
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Scanner', url: '/scanner', icon: 'barcode' },
-    { title: 'Liste des vins', url: '/wine-list', icon: 'wine' },
+    {title: 'Scanner', url: '/scanner', icon: 'barcode'},
+    {title: 'Liste des vins', url: '/wine-list', icon: 'wine'},
   ];
-  constructor(private authService: AuthService, private router: Router) {
+
+  constructor(private authService: AuthService, private router: Router, private menu: MenuController) {
   }
 
 
-  async logout()
-  {
-      await this.authService.logout();
-      this.router.navigateByUrl('login');
+  async logout() {
+    await this.menu.close();
+    await this.authService.logout();
+    this.router.navigateByUrl('login');
   }
 
   userIsLoged() {
@@ -31,10 +33,10 @@ export class AppComponent {
     }
   }
 
-  getUserName()
-  {
+  getUserName() {
     return this.authService.username;
   }
+
   redirectUser() {
     const user = this.authService.getUserLogged();
     if (user) {
