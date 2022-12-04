@@ -10,6 +10,7 @@ import { Comment } from './src/models/Comment.js';
 import { CommentDAO } from './src/dao/CommentDAO.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import moment from 'moment';
 
 
 
@@ -129,7 +130,9 @@ app.post('/login', async (req, res) => {
                     username: user.getUsername(),
                     admin: user.isAdmin(),
                     token: generateJWT(req.body.username),
-                    refresh: generateRefreshJWT(req.body.username)
+                    tokenExpiresAt: moment().add(process.env.JWT_LIFE.slice(0, -1), 'seconds').unix(),
+                    refresh: generateRefreshJWT(req.body.username),
+                    refreshExpiresAt: moment().add(process.env.JWT_REFRESH_LIFE.slice(0, -1), 'seconds').unix()
                 });
             } else {
                 return res.status(401).json({ message: 'Error. Wrong login or password' });
@@ -154,7 +157,10 @@ app.post('/refresh', async (req, res) => {
 
         if (jwt.verify(body.refresh, process.env.JWT_REFRESH_SECRET)) {
             const token = generateJWT(body.username);
-            return res.status(200).json({ token: token });
+            return res.status(200).json({
+                token: token,
+                tokenExpiresAt: moment().add(process.env.JWT_LIFE.slice(0, -1), 'seconds').unix()
+            });
         } else {
             return res.status(401).json({ message: 'Error. Invalid refresh token' });
         }
