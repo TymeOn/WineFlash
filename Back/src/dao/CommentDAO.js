@@ -17,16 +17,12 @@ export class CommentDAO {
         let data = [];
         if(result && result.rows) {
             for (const row of result.rows) {
-                const userDAO = new UserDAO();
-                const a = await userDAO.get(row.author);
-                const wineDAO = new WineDAO();
-                const w = await wineDAO.get(row.wine);
                 const comment = new Comment(
                     row.id,
+                    row.text,
                     row.rating,
-                    row.rating,
-                    a,
-                    w
+                    row.author,
+                    row.wine
                 );
                 data.push(comment);
             }
@@ -47,21 +43,46 @@ export class CommentDAO {
         }
         const result = await client.query(query);
         if(result && result.rows && result.rows[0]) {
-            const userDAO = new UserDAO();
-            const a = await userDAO.get(result.rows[0].author);
-            const wineDAO = new WineDAO();
-            const w = await wineDAO.get(result.rows[0].wine);
             data = new Comment(
                 result.rows[0].id,
                 result.rows[0].text,
                 result.rows[0].rating,
-                a,
-                w
+                row.author,
+                row.wine
             );
         }
         return data;
     }
 
+
+    // get the comments linked to a wine
+    async getFromWine(wineId) {
+        const client = await DB.open();
+        const query = {
+            text: 'SELECT * FROM "' + process.env.PG_SCHEMA + '"."comment" WHERE wine=$1 ORDER BY id ASC',
+            values: [wineId],
+        }
+        const result = await client.query(query);
+        let data = [];
+        if(result && result.rows) {
+            for (const row of result.rows) {
+                const userDao = new UserDAO();
+                const a = await userDao.get(row.author)
+                const comment = new Comment(
+                    row.id,
+                    row.text,
+                    row.rating,
+                    a.getUsername(),
+                    row.wine
+                );
+                data.push(comment);
+            }
+        } else {
+            data = null;
+        }
+        return data;
+    }
+    
 
     // add a new comment
     async add(text, rating, author, wine) {
@@ -71,9 +92,9 @@ export class CommentDAO {
                 'text, ' +
                 'rating, ' + 
                 'author, ' +
-                'wine, ' +
+                'wine ' +
                 ') VALUES ($1, $2, $3, $4) RETURNING *',
-            values: [text, rating, author.getId(), wine.getId()],
+            values: [text, rating, author, wine],
         };
         const result = await client.query(query);
         let data;
@@ -86,7 +107,7 @@ export class CommentDAO {
                 result.rows[0].wine
             );
         } else {
-        data = null;
+            data = null;
         }
         return data;
     }
@@ -108,22 +129,18 @@ export class CommentDAO {
                     comment.getId(),
                     comment.getText(),
                     comment.getRating(),
-                    comment.getAuthor().getId(),
-                    comment.getWine().getId(),
+                    comment.getAuthor(),
+                    comment.getWine(),
                 ],
             }
             const result = await client.query(query);
             if(result && result.rows && result.rows[0]) {
-                const userDAO = new UserDAO();
-                const a = await userDAO.get(result.rows[0].author);
-                const wineDAO = new WineDAO();
-                const w = await wineDAO.get(result.rows[0].wine);
-                data = new Wine(
+                data = new Comment(
                     result.rows[0].id,
                     result.rows[0].text,
                     result.rows[0].rating,
-                    a,
-                    w
+                    result.rows[0].author,
+                    result.rows[0].wine,
                 );
             }
         }
@@ -140,16 +157,12 @@ export class CommentDAO {
         }
         const result = await client.query(query);
         if(result && result.rows && result.rows[0]) {
-            const userDAO = new UserDAO();
-            const a = await userDAO.get(result.rows[0].author);
-            const wineDAO = new WineDAO();
-            const w = await wineDAO.get(result.rows[0].wine);
-            data = new Wine(
+            data = new Comment(
                 result.rows[0].id,
                 result.rows[0].text,
                 result.rows[0].rating,
-                a,
-                w
+                result.rows[0].author,
+                result.rows[0].wine,
             );
         }
         return data;

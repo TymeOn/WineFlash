@@ -1,0 +1,73 @@
+<ion-list *ngIf="wine" class="ion-no-padding">
+  <ion-item lines="full">
+    <ion-label position="stacked">Nom</ion-label>
+    <ion-input [(ngModel)]="wine.name" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Description</ion-label>
+    <ion-textarea [(ngModel)]="wine.description" [readonly]="!editable"></ion-textarea>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Couleur</ion-label>
+    <ion-input [(ngModel)]="wine.color" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item *ngIf="editable" lines="full">
+    <ion-label position="stacked">Template</ion-label>
+    <ion-input [(ngModel)]="wine.template"></ion-input>
+  </ion-item>
+
+  <ion-item *ngIf="editable" lines="full">
+    <ion-label position="stacked">Code article</ion-label>
+    <ion-input [(ngModel)]="wine.barcode"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Année</ion-label>
+    <ion-input [(ngModel)]="wine.year" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Domaine</ion-label>
+    <ion-input [(ngModel)]="wine.estate" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Variété</ion-label>
+    <ion-input [(ngModel)]="wine.variety" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Appellation</ion-label>
+    <ion-input [(ngModel)]="wine.appellation" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Vigneron</ion-label>
+    <ion-input [(ngModel)]="wine.winemaker" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Prix</ion-label>
+    <ion-input [(ngModel)]="wine.price" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Capacité</ion-label>
+    <ion-input [(ngModel)]="wine.capacity" [readonly]="!editable"></ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">BIO</ion-label>
+    <ion-checkbox [(ngModel)]="wine.bio" [disabled]="!editable"></ion-checkbox>
+  </ion-item>
+</ion-list>
+
+<ion-button *ngIf="editable && !newWine" expand="block" (click)="updateWine()">Enregistrer les modifications</ion-button>
+
+<ion-button (click)="presentDeleteAlert()" *ngIf="editable && !newWine" color="danger" expand="block">Supprimer le vin
+</ion-button>
+
+<ion-button *ngIf="newWine" expand="block" (click)="createWine()">Créer le vin</ion-button>

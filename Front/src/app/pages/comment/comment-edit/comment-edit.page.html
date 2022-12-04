@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="'Retour'"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Commentaires</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Commentaires</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <ion-list>
+      <ion-card *ngFor="let comment of commentList">
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon *ngFor="let _ of [].constructor(comment.rating)" name="star"></ion-icon>
+            <ion-icon *ngFor="let _ of [].constructor(5 - comment.rating)" name="star-outline"></ion-icon>
+            <ion-button (click)="presentDeleteAlert(comment.id)" color="danger" style="float: right">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </ion-card-title>
+          <ion-card-subtitle>{{ comment.author }}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          {{ comment.text }}
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </div>
+
+
+</ion-content>

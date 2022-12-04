@@ -10,6 +10,7 @@ import {DataService} from "./services/data.service";
 export class AppComponent {
   public appPages = [
     { title: 'Scanner', url: '/scanner', icon: 'barcode' },
+    { title: 'Liste des vins', url: '/wine-list', icon: 'wine' },
   ];
   constructor(private authService: AuthService, private router: Router) {
   }
