@@ -66,7 +66,7 @@ export class AuthService {
       this.authSubject = false;
     }
   }
-
+// Génère un nouveau token s'il expire dans 1 heure
   async generateNewToken() {
     const ONE_HOUR = (60 * 60 * 1000);
     const tokenExpiresAt = await this.dataService.getData('tokenExpiresAt');
