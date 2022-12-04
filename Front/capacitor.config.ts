@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'WineFlash-Front',
+  appName: 'WineFlash',
   webDir: 'www',
   bundledWebRuntime: false
 };
