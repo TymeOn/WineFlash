@@ -3,17 +3,17 @@
     <form #form="ngForm" (ngSubmit)="register(form)">
       <ion-card>
         <ion-card-header>
-          <ion-card-title>Create your account !</ion-card-title>
+          <ion-card-title>Inscrivez-vous !</ion-card-title>
           <ion-item>
-            <ion-label position="floating">Username</ion-label>
-            <ion-input name="username" type="text" placeholder="Username" ngModel required></ion-input>
+            <ion-label position="floating">Nom d'utilisateur</ion-label>
+            <ion-input name="username" type="text" placeholder="Nom d'utilisateur" ngModel required></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Password</ion-label>
-            <ion-input name="password" type="password" placeholder="Password" ngModel required></ion-input>
+            <ion-label position="floating">Mot de passe</ion-label>
+            <ion-input name="password" type="password" placeholder="Mot de passe" ngModel required></ion-input>
           </ion-item>
-          <ion-button size="full" type="submit" [disabled]="form.invalid" expand="block">Register</ion-button>
-          <ion-button fill="clear" size="full" routerLink='/login'>Déja inscrit</ion-button>
+          <ion-button size="full" type="submit" [disabled]="form.invalid" expand="block">Inscription</ion-button>
+          <ion-button fill="clear" size="full" routerLink='/login'>Déjà inscrit</ion-button>
         </ion-card-header>
         <ion-card-content>
         </ion-card-content>
