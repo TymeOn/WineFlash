@@ -1,9 +1,9 @@
-import { Injectable } from  '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {switchMap, tap} from 'rxjs/operators';
-import {Observable, BehaviorSubject, from, of} from 'rxjs';
-import { environment } from '../../environments/environment';
-import { DataService } from './data.service';
+import {tap} from 'rxjs/operators';
+import {from} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {DataService} from './data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,9 @@ export class AuthService {
   authSubject = false;
   currentAccessToken = null;
 
-  constructor(private  httpClient:  HttpClient, private  dataService:  DataService) {}
+  constructor(private  httpClient:  HttpClient, private  dataService:  DataService) {
+    this.isLoggedIn();
+  }
 
 
   register(user) {
@@ -48,28 +50,16 @@ export class AuthService {
     this.authSubject = false;
   }
 
-  isLoggedIn() {
+  getUserLogged() {
     return this.authSubject;
   }
 
-  async loadToken() {
+  async isLoggedIn() {
     const token = await this.dataService.getData('token');
-    if (token && token.value) {
-      this.currentAccessToken = token.value;
+    if (token) {
       this.authSubject = true;
     } else {
       this.authSubject = false;
     }
-  }
-  async generateNewToken() {
-    const refreshToken = from(await this.dataService.getData('refresh'));
-    const userData = from(await this.dataService.getData('username  '));
-
-    const refreshData = {
-      username: userData,
-      refresh: refreshToken
-    };
-
-    return this.httpClient.post<any>(`${this.baseURL}/refresh`, refreshData);
   }
 }

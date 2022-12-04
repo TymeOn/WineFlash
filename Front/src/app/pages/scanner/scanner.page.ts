@@ -3,6 +3,8 @@ import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { ToastController } from '@ionic/angular';
+import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-scanner',
@@ -14,10 +16,20 @@ export class ScannerPage implements OnInit, AfterViewInit {
   cameraAllowed = false;
   isScanning = false;
 
-  constructor(private http: HttpClient, private toastController: ToastController) {}
+  constructor(private http: HttpClient, private toastController: ToastController, private router: Router, private authService: AuthService) {
+  }
 
   ngOnInit() {
     this.checkPermission().then();
+  }
+
+  redirectUser() {
+    const user = this.authService.getUserLogged();
+    if (user) {
+      this.router.navigateByUrl('scanner');
+    } else {
+      this.router.navigateByUrl('login');
+    }
   }
 
   ngAfterViewInit() {

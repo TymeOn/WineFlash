@@ -29,3 +29,10 @@ body.scanner-active {
   --background: transparent;
   --ion-background-color: transparent;
 }
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

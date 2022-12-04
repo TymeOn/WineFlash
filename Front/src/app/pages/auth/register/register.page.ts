@@ -29,6 +29,8 @@ export class RegisterPage implements OnInit {
           });
 
           await toast.present();
+
+          this.router.navigateByUrl('login');
         }
       },
       async (err) => {

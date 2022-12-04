@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+import {HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,16 @@ export class DataService {
   async removeData(itemName)
   {
     return this.storage.remove(itemName);
+  }
+
+  getHttpOptions() {
+    const token = this.getData('token');
+
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      })
+    };
   }
 }

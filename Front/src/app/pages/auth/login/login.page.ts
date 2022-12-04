@@ -9,8 +9,11 @@ import {ToastController} from "@ionic/angular";
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+  other_content: any;
 
-  constructor(private  authService:  AuthService, private  router:  Router, private toastController: ToastController) { }
+  constructor(private  authService:  AuthService, private  router:  Router, private toastController: ToastController) {
+    this.redirectUser();
+  }
 
   ngOnInit() {
   }
@@ -31,5 +34,23 @@ export class LoginPage implements OnInit {
         await toast.present();
       }
     );
+  }
+
+  redirectUser() {
+    const user = this.authService.getUserLogged();
+    if (user) {
+      this.router.navigateByUrl('scanner');
+    } else {
+      this.router.navigateByUrl('login');
+    }
+  }
+
+  userIsLoged() {
+    const user = this.authService.getUserLogged();
+    if (user) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
