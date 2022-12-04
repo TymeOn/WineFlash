@@ -13,6 +13,7 @@ export class AuthService {
   baseURL  =  environment.url;
   authSubject = false;
   currentAccessToken = null;
+  username = null;
 
   constructor(private  httpClient:  HttpClient, private  dataService:  DataService, private toastController: ToastController) {
     this.isLoggedIn();
@@ -28,6 +29,7 @@ export class AuthService {
         if (res)
         {
           this.currentAccessToken = res.token;
+          this.username = res.username;
           await this.dataService.addData('username', res.username);
           await this.dataService.addData('token', res.token);
           await this.dataService.addData('tokenExpiresAt', res.tokenExpiresAt);
@@ -50,6 +52,7 @@ export class AuthService {
     await this.dataService.removeData('refreshExpiresAt');
     this.authSubject = false;
     this.currentAccessToken = null;
+    this.username = null;
 
   }
   // Récupère la donnée de connexion de l'utilisateur

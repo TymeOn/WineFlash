@@ -31,6 +31,10 @@ export class AppComponent {
     }
   }
 
+  getUserName()
+  {
+    return this.authService.username;
+  }
   redirectUser() {
     const user = this.authService.getUserLogged();
     if (user) {

@@ -4,7 +4,7 @@
       <ion-content>
         <ion-list id="menu-list">
           <ion-list-header>WineFlash</ion-list-header>
-          <ion-note>Test Man</ion-note>
+          <ion-note>{{getUserName()}}</ion-note>
 
           <ion-item *ngIf="userIsLoged()" expand="block" >
             <ion-icon slot="start" name="log-out-outline"></ion-icon>
