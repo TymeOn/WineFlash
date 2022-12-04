@@ -19,11 +19,11 @@ export class AuthService {
   }
   //Requête Http qui permet de créer un utilisateur
   register(user) {
-    return this.httpClient.post<any>(`${this.baseURL}/register`, user);
+    return this.httpClient.post<any>(`${this.baseURL}register`, user);
   }
 //Requête Http qui permet de ajouter les données d'un utilisateur dans le LocaStorage
   login(user) {
-    return this.httpClient.post<any>(`${this.baseURL}/login`, user).pipe(
+    return this.httpClient.post<any>(`${this.baseURL}login`, user).pipe(
       tap(async (res: any) => {
         if (res)
         {
@@ -83,7 +83,7 @@ export class AuthService {
         refresh: refreshToken
       };
 
-      this.httpClient.post<any>(`${this.baseURL}/refresh`, refreshData).pipe(
+      this.httpClient.post<any>(`${this.baseURL}refresh`, refreshData).pipe(
         tap(async (res: any) => {
             if (res) {
               await this.dataService.addData('token', res.token);
