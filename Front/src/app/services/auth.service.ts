@@ -11,23 +11,20 @@ import {DataService} from './data.service';
 export class AuthService {
   baseURL  =  environment.url;
   authSubject = false;
-  currentAccessToken = null;
 
   constructor(private  httpClient:  HttpClient, private  dataService:  DataService) {
     this.isLoggedIn();
   }
-
-
+  //Requête Http qui permet de créer un utilisateur
   register(user) {
     return this.httpClient.post<any>(`${this.baseURL}/register`, user);
   }
-
+//Requête Http qui permet de ajouter les données d'un utilisateur dans le LocaStorage
   login(user) {
     return this.httpClient.post<any>(`${this.baseURL}/login`, user).pipe(
       tap(async (res: any) => {
         if (res)
         {
-          this.currentAccessToken =  res.token;
           await this.dataService.addData('username', res.username);
           await this.dataService.addData('token', res.token);
           await this.dataService.addData('tokenExpiresAt', res.tokenExpiresAt);
@@ -40,6 +37,7 @@ export class AuthService {
     );
   }
 
+  // Permet de supprimer les données de l'utilisateur dans le LocalStorage
   async logout() {
     await this.dataService.removeData('username');
     await this.dataService.removeData('token');
@@ -49,11 +47,12 @@ export class AuthService {
     await this.dataService.removeData('refreshExpiresAt');
     this.authSubject = false;
   }
-
+  // Récupère la donnée de connexion de l'utilisateur
   getUserLogged() {
     return this.authSubject;
   }
 
+  //Permet de vérifier la connexion de l'utilisateur à l'aide du token
   async isLoggedIn() {
     const token = await this.dataService.getData('token');
     if (token) {

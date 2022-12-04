@@ -17,7 +17,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
   }
-
+// Envoie les données du formulaire pour la connexion de l'utilisateur
   login(form){
     console.log(form.value);
     this.authService.login(form.value).subscribe((res)=>{
@@ -35,22 +35,13 @@ export class LoginPage implements OnInit {
       }
     );
   }
-
+// Redirection de l'utilisateur selon la connexion
   redirectUser() {
     const user = this.authService.getUserLogged();
     if (user) {
       this.router.navigateByUrl('scanner');
     } else {
       this.router.navigateByUrl('login');
-    }
-  }
-
-  userIsLoged() {
-    const user = this.authService.getUserLogged();
-    if (user) {
-      return true;
-    } else {
-      return false;
     }
   }
 }

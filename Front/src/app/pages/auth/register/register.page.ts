@@ -15,7 +15,7 @@ export class RegisterPage implements OnInit {
 
   ngOnInit() {
   }
-
+// Envoie les données du formulaire pour l'inscription de l'utilisateur
   register(form) {
     console.log(form.value);
     this.authService.register(form.value).subscribe(
