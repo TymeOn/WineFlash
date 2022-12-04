@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="'Retour'"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Détails du vin</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h3 class="ion-padding-start">Informations générales</h3>
+
+  <ion-list class="ion-no-padding">
+    <ion-item lines="full">
+      <ion-label position="stacked">Note</ion-label>
+      <div style="display: inline">
+        <ion-icon (click)="comment.rating = 1" [name]="comment.rating >= 1 ? 'star' : 'star-outline'"
+                  size="large"></ion-icon>
+        <ion-icon (click)="comment.rating = 2" [name]="comment.rating >= 2 ? 'star' : 'star-outline'"
+                  size="large"></ion-icon>
+        <ion-icon (click)="comment.rating = 3" [name]="comment.rating >= 3 ? 'star' : 'star-outline'"
+                  size="large"></ion-icon>
+        <ion-icon (click)="comment.rating = 4" [name]="comment.rating >= 4 ? 'star' : 'star-outline'"
+                  size="large"></ion-icon>
+        <ion-icon (click)="comment.rating = 5" [name]="comment.rating >= 5 ? 'star' : 'star-outline'"
+                  size="large"></ion-icon>
+      </div>
+    </ion-item>
+
+    <ion-item lines="full">
+      <ion-label position="stacked">Commentaire</ion-label>
+      <ion-textarea [(ngModel)]="comment.text"></ion-textarea>
+    </ion-item>
+  </ion-list>
+
+  <ion-button (click)="createComment()" expand="block">Poster le commentaire</ion-button>
+
+</ion-content>

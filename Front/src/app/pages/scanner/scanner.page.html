@@ -19,20 +19,11 @@
       Veuillez activer les permissions d'accès à la caméra dans vos paramètres
     </div>
 
-    <div *ngIf="!isScanning">
-      <ion-button expand="block" size="large" class="ion-margin-start ion-margin-end" style="height: 5em" (click)="testScan()">
-        <ion-icon slot="start" name="barcode"></ion-icon>
-        <div class="ion-text-center">
-          [DEBUG]
-        </div>
-      </ion-button>
-    </div>
-
     <div *ngIf="cameraAllowed && !isScanning">
       <ion-button expand="block" size="large" class="ion-margin-start ion-margin-end" style="height: 5em" (click)="startScan()">
         <ion-icon slot="start" name="barcode"></ion-icon>
         <div class="ion-text-center">
-          Scanner une bouteille de vin
+          Scanner une bouteille
         </div>
       </ion-button>
     </div>
@@ -43,5 +34,4 @@
       <ion-icon [ios]="'close-outline'" [md]="'close-sharp'"></ion-icon>
     </ion-button>
   </div>
-
 </ion-content>
